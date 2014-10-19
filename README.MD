@@ -12,7 +12,7 @@ Note (2): Brightness (dimming) values for RGBW bulbs are different for white and
 
 Note (3): RGBW bulbs can't mix RGB and white colors, these bulbs only can operate in white or RGB mode so you can't set saturation, only brightness can be set in RGB mode.
 
-Note (4): Since Wifi Bridge V.4 the web interface for Wifi Bridge configuration has been removed and static IP can be set only from mobile app or AT commands (currently we are working on it to add to PHP API for configuration and auto bridge discovery)
+Note (4): Since Wifi Bridge V.4 the web interface for Wifi Bridge configuration has been removed and static IP can be set only from mobile app or AT commands (currently we are working on it to add PHP API for configuration and auto bridge discovery)
 
 
 there is two methods for setting active group one for rgbw bulbs (setRgbwActiveGroup or rgbwSetActiveGroup) and the other for white bulbs (setWhiteActiveGroup or whiteSetActiveGroup).
