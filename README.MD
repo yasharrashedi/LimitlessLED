@@ -19,7 +19,7 @@ there are two methods for setting active group one for rgbw bulbs (setRgbwActive
 After setting active channel you will be able to send command to desired bulb group.
 there are several helper methods that makes life easy, and makes no need for setting active group for some command.
 Also this bulbs only support 256 colors (not 16 millions) but there is a method for setting rgb hex strings like #FF1254, so this method translates color to nearest color of milight color code.
-Also you can set HSV colors for rgbw bulbs.
+You can also a method to set HSV colors for rgbw bulbs.
 
 Example:
 
