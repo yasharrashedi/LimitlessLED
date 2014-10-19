@@ -753,7 +753,7 @@ class Milight
         $this->command('whiteGroup4NightMode');
     }
 
-    public function rgbWetColorHsv(Array $hsvColor)
+    public function rgbwSetColorHsv(Array $hsvColor)
     {
         $milightColor = $this->hslToMilightColor($hsvColor);
         $activeGroupOnCommand = 'rgbwGroup' . $this->getRgbwActiveGroup() . 'On';
