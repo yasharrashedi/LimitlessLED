@@ -131,7 +131,8 @@ class Milight
 
 
     //the same as setRgbwActiveGroup just to make method invocation easier according to convention
-    public function rgbwSetActiveGroup($rgbwActiveGroup){
+    public function rgbwSetActiveGroup($rgbwActiveGroup)
+    {
         $this->setRgbwActiveGroup($rgbwActiveGroup);
     }
 
@@ -158,7 +159,8 @@ class Milight
     }
 
     //the same as setWhiteActiveGroup just to make method invocation easier according to convention
-    public function whiteSetActiveGroup($whiteActiveGroup){
+    public function whiteSetActiveGroup($whiteActiveGroup)
+    {
         $this->setWhiteActiveGroup($whiteActiveGroup);
     }
 
@@ -216,7 +218,7 @@ class Milight
         return true;
     }
 
-    
+
     public function rgbwAllOn()
     {
         $this->command('rgbwAllOn');
@@ -352,94 +354,93 @@ class Milight
 
     public function rgbwBrightnessPercent($brightnessPercent)
     {
-        if($brightnessPercent <0 || $brightnessPercent > 100){
+        if ($brightnessPercent < 0 || $brightnessPercent > 100) {
             throw new \Exception('Brightness percent must be between 0 and 100');
         }
         $brightness = 0x02;
         $this->rgbwSendOnToActiveGroup();
-        if($brightnessPercent<14){
+        if ($brightnessPercent < 14) {
             $brightness = 0x02;
         }
-        if($brightnessPercent>=14 && $brightnessPercent<17){
+        if ($brightnessPercent >= 14 && $brightnessPercent < 17) {
             $brightness = 0x03;
         }
-        if($brightnessPercent>=17 && $brightnessPercent<21){
+        if ($brightnessPercent >= 17 && $brightnessPercent < 21) {
             $brightness = 0x04;
         }
-        if($brightnessPercent>=21 && $brightnessPercent<24){
+        if ($brightnessPercent >= 21 && $brightnessPercent < 24) {
             $brightness = 0x05;
         }
-        if($brightnessPercent>=24 && $brightnessPercent<28){
+        if ($brightnessPercent >= 24 && $brightnessPercent < 28) {
             $brightness = 0x06;
         }
-        if($brightnessPercent>=28 && $brightnessPercent<32){
+        if ($brightnessPercent >= 28 && $brightnessPercent < 32) {
             $brightness = 0x07;
         }
-        if($brightnessPercent>=32 && $brightnessPercent<35){
+        if ($brightnessPercent >= 32 && $brightnessPercent < 35) {
             $brightness = 0x08;
         }
-        if($brightnessPercent>=35 && $brightnessPercent<39){
+        if ($brightnessPercent >= 35 && $brightnessPercent < 39) {
             $brightness = 0x09;
         }
-        if($brightnessPercent>=39 && $brightnessPercent<42){
+        if ($brightnessPercent >= 39 && $brightnessPercent < 42) {
             $brightness = 0xa0;
         }
-        if($brightnessPercent>=42 && $brightnessPercent<46){
+        if ($brightnessPercent >= 42 && $brightnessPercent < 46) {
             $brightness = 0xb0;
         }
-        if($brightnessPercent>=46 && $brightnessPercent<50){
+        if ($brightnessPercent >= 46 && $brightnessPercent < 50) {
             $brightness = 0xc0;
         }
-        if($brightnessPercent>=50 && $brightnessPercent<53){
+        if ($brightnessPercent >= 50 && $brightnessPercent < 53) {
             $brightness = 0xd0;
         }
-        if($brightnessPercent>=53 && $brightnessPercent<57){
+        if ($brightnessPercent >= 53 && $brightnessPercent < 57) {
             $brightness = 0xe0;
         }
-        if($brightnessPercent>=57 && $brightnessPercent<60){
+        if ($brightnessPercent >= 57 && $brightnessPercent < 60) {
             $brightness = 0xf0;
         }
-        if($brightnessPercent>=60 && $brightnessPercent<64){
+        if ($brightnessPercent >= 60 && $brightnessPercent < 64) {
             $brightness = 0x10;
         }
-        if($brightnessPercent>=64 && $brightnessPercent<68){
+        if ($brightnessPercent >= 64 && $brightnessPercent < 68) {
             $brightness = 0x11;
         }
-        if($brightnessPercent>=68 && $brightnessPercent<71){
+        if ($brightnessPercent >= 68 && $brightnessPercent < 71) {
             $brightness = 0x12;
         }
-        if($brightnessPercent>=71 && $brightnessPercent<75){
+        if ($brightnessPercent >= 71 && $brightnessPercent < 75) {
             $brightness = 0x13;
         }
-        if($brightnessPercent>=75 && $brightnessPercent<78){
+        if ($brightnessPercent >= 75 && $brightnessPercent < 78) {
             $brightness = 0x14;
         }
-        if($brightnessPercent>=78 && $brightnessPercent<82){
+        if ($brightnessPercent >= 78 && $brightnessPercent < 82) {
             $brightness = 0x15;
         }
-        if($brightnessPercent>=82 && $brightnessPercent<86){
+        if ($brightnessPercent >= 82 && $brightnessPercent < 86) {
             $brightness = 0x16;
         }
-        if($brightnessPercent>=86 && $brightnessPercent<89){
+        if ($brightnessPercent >= 86 && $brightnessPercent < 89) {
             $brightness = 0x17;
         }
-        if($brightnessPercent>=89 && $brightnessPercent<93){
+        if ($brightnessPercent >= 89 && $brightnessPercent < 93) {
             $brightness = 0x18;
         }
-        if($brightnessPercent>=93 && $brightnessPercent<96){
+        if ($brightnessPercent >= 93 && $brightnessPercent < 96) {
             $brightness = 0x19;
         }
-        if($brightnessPercent>=96 && $brightnessPercent<100){
+        if ($brightnessPercent >= 96 && $brightnessPercent < 100) {
             $brightness = 0x1a;
         }
-        if($brightnessPercent>=96 && $brightnessPercent<=100){
+        if ($brightnessPercent >= 96 && $brightnessPercent <= 100) {
             $brightness = 0x1b;
         }
 
-        $this->sendCommand(array(0x4e , $brightness));
+        $this->sendCommand(array(0x4e, $brightness));
 
     }
-
 
 
     public function rgbwDiscoMode()
@@ -607,15 +608,17 @@ class Milight
     {
         $this->command('whiteAllBrightnessMax');
     }
+
     public function whiteAllBrightnessMin()
     {
         $this->setWhiteActiveGroup(0);
         $this->whiteSendOnToActiveGroup();
-        for($i=0;$i<10;$i++){
+        for ($i = 0; $i < 10; $i++) {
             $this->command('whiteBrightnessDown');
         }
 
     }
+
     public function whiteAllNightMode()
     {
         $this->command('whiteAllNightMode');
@@ -698,31 +701,34 @@ class Milight
     {
         $this->setWhiteActiveGroup(1);
         $this->whiteSendOnToActiveGroup();
-        for($i=0;$i<10;$i++){
+        for ($i = 0; $i < 10; $i++) {
             $this->command('whiteBrightnessDown');
         }
     }
+
     public function whiteGroup2BrightnessMin()
     {
         $this->setWhiteActiveGroup(2);
         $this->whiteSendOnToActiveGroup();
-        for($i=0;$i<10;$i++){
+        for ($i = 0; $i < 10; $i++) {
             $this->command('whiteBrightnessDown');
         }
     }
+
     public function whiteGroup3BrightnessMin()
     {
         $this->setWhiteActiveGroup(3);
         $this->whiteSendOnToActiveGroup();
-        for($i=0;$i<10;$i++){
+        for ($i = 0; $i < 10; $i++) {
             $this->command('whiteBrightnessDown');
         }
     }
+
     public function whiteGroup4BrightnessMin()
     {
         $this->setWhiteActiveGroup(4);
         $this->whiteSendOnToActiveGroup();
-        for($i=0;$i<10;$i++){
+        for ($i = 0; $i < 10; $i++) {
             $this->command('whiteBrightnessDown');
         }
     }
