@@ -47,7 +47,7 @@ $milight->whiteAllBrightnessMax();
 sleep(2);
 $milight->whiteGroup1NightMode();
 sleep(2);
-$milight->setWhiteActiveGroup(1);
+$milight->setWhiteActiveGroup(2);
 $milight->whiteWarmIncrease();
 $milight->whiteWarmIncrease();
 $milight->whiteWarmIncrease();
