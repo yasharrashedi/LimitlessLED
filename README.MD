@@ -33,7 +33,7 @@ $milight->setRgbwActiveGroup(1);
 $milight->rgbwBrightnessPercent(50);
 sleep(2);
 $milight->setRgbwActiveGroup(2);
-$milight->rgbwSetColorHexString('FF1254');
+$milight->rgbwSetColorHexString('FF1254'); //or #FF1254
 $milight->rgbwBrightnessPercent(90);
 sleep(2);
 $milight->whiteAllOn();
