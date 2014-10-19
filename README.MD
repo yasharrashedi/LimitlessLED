@@ -6,7 +6,9 @@ This code has been tested on Wifi Bridge V.4 and working pretty well.
 any help, bugfixes are welcome.
 
 
-Note: There are two diffrent channels for white and RGBW on Wifi Bridge so you cannot mix white bulbs with RGBW bulbs on the same group.
+Note (1): There are two diffrent channels for white and RGBW on Wifi Bridge so you cannot mix white bulbs with RGBW bulbs on the same group.
+Note (2): Brightness (dimming) values for RGBW bulbs are different for white and RGB modes and brightness value is saved in bulbs separately for white and RGB modes.
+Note (3): RGBW bulbs can't mix RGB and white colors, these bulbs only can operate in white or RGB mode so you can't set saturation, only brightness can be set in RGB mode.
 
 there is two methods for setting active group one for rgbw bulbs (setRgbwActiveGroup) and the other for white bulbs (setWhiteActiveGroup).
 After setting active channel you will be able to send command to desired bulb group.
