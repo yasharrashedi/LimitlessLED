@@ -129,6 +129,12 @@ class Milight
         $this->rgbwActiveGroup = $rgbwActiveGroup;
     }
 
+
+    //the same as setRgbwActiveGroup just to make method invocation easier according to convention
+    public function rgbwSetActiveGroup($rgbwActiveGroup){
+        $this->setRgbwActiveGroup($rgbwActiveGroup);
+    }
+
     /**
      * @throws Exception
      * @return int
@@ -149,6 +155,11 @@ class Milight
             throw new \Exception('Active White Group must be between or equal 0 to 4, note: 0 means all groups');
         }
         $this->whiteActiveGroup = $whiteActiveGroup;
+    }
+
+    //the same as setWhiteActiveGroup just to make method invocation easier according to convention
+    public function whiteSetActiveGroup($whiteActiveGroup){
+        $this->setWhiteActiveGroup($whiteActiveGroup);
     }
 
     /**
