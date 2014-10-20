@@ -784,8 +784,8 @@ class Milight
             $r = hexdec(substr($hexColor, 2, 2));
             $g = hexdec(substr($hexColor, 4, 2));
             $b = hexdec(substr($hexColor, 6, 2));
-            if ($r == 0 && $g == 0 && $b == 0) {
-                throw new \Exception('Color cannot be black');
+            if (($r == 0 && $g == 0 && $b == 0) || ($r == 255 && $g == 255 && $b == 255)) {
+                throw new \Exception('Color cannot be black or white');
             }
             return array($r, $g, $b);
         }
@@ -793,8 +793,8 @@ class Milight
         $r = hexdec(substr($hexColor, 0, 2));
         $g = hexdec(substr($hexColor, 2, 2));
         $b = hexdec(substr($hexColor, 4, 2));
-        if ($r == 0 && $g == 0 && $b == 0) {
-            throw new \Exception('Color cannot be black');
+        if (($r == 0 && $g == 0 && $b == 0) || ($r == 255 && $g == 255 && $b == 255)) {
+            throw new \Exception('Color cannot be black or white');
         }
         return array($r, $g, $b);
     }
