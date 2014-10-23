@@ -802,9 +802,9 @@ class Milight
 
     public function rgbToHsl($r, $g, $b)
     {
-        $r /= 255;
-        $g /= 255;
-        $b /= 255;
+        $r = $r / 255;
+        $g = $g / 255;
+        $b = $b / 255;
         $max = max($r, $g, $b);
         $min = min($r, $g, $b);
         $l = ($max + $min) / 2;
