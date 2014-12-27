@@ -521,7 +521,7 @@ class Milight
             $this->rgbwAllSetToWhite();
             return;
         }
-        $this->command('rgbwGroup'+str($this->getActiveGroup())+'SetToWhite');
+        $this->command('rgbwGroup'.strval($this->getActiveGroup()).'SetToWhite');
     }
 
     public function rgbwSetColorToAqua()
