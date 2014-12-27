@@ -33,7 +33,7 @@ class Milight
     private $rgbwActiveGroup = 0; // 0 means all
     private $whiteActiveGroup = 0; // 0 means all
     private $commandCodes = array(
-        //RGBW Bubls commands
+        //RGBW Bulb commands
         'rgbwAllOn' => array(0x42, 0x00),
         'rgbwAllOff' => array(0x41, 0x00),
         'rgbwGroup1On' => array(0x45, 0x00),
@@ -72,7 +72,7 @@ class Milight
         'rgbwSetColorToLavendar' => array(0x40, 0xf0),
 
 
-        //white Bulb commands
+        // White Bulb commands
         'whiteAllOn' => array(0x35, 0x00),
         'whiteAllOff' => array(0x39, 0x00),
         'whiteBrightnessUp' => array(0x3c, 0x00),
@@ -124,13 +124,17 @@ class Milight
     public function setRgbwActiveGroup($rgbwActiveGroup)
     {
         if ($rgbwActiveGroup < 0 || $rgbwActiveGroup > 4) {
-            throw new \Exception('Active RGBW Group must be between or equal 0 to 4, note: 0 means all groups');
+            throw new \Exception('Active RGBW group must be between 0 and 4. 0 means all groups');
         }
         $this->rgbwActiveGroup = $rgbwActiveGroup;
     }
 
 
-    //the same as setRgbwActiveGroup just to make method invocation easier according to convention
+    // Same as setRgbwActiveGroup. Exists just to make method invocation easier according to the convention
+    /**
+    * @param int $rgbwActiveGroup
+    * @throws Exception
+    */
     public function rgbwSetActiveGroup($rgbwActiveGroup)
     {
         $this->setRgbwActiveGroup($rgbwActiveGroup);
@@ -158,7 +162,11 @@ class Milight
         $this->whiteActiveGroup = $whiteActiveGroup;
     }
 
-    //the same as setWhiteActiveGroup just to make method invocation easier according to convention
+    // Same as setWhiteActiveGroup. Exists just to make method invocation easier according to the convention
+    /**
+    * @param int $whiteActiveGroup
+    * @throws Exception
+    */
     public function whiteSetActiveGroup($whiteActiveGroup)
     {
         $this->setWhiteActiveGroup($whiteActiveGroup);
@@ -182,7 +190,7 @@ class Milight
 
     public function sendCommand(Array $command)
     {
-        $command[] = 0x55; //last byte always 0x55, will appended to all commands
+        $command[] = 0x55; // last byte is always 0x55, will be appended to all commands
         $message = vsprintf(str_repeat('%c', count($command)), $command);
         if ($socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP)) {
             socket_sendto($socket, $message, strlen($message), 0, $this->host, $this->port);
@@ -502,6 +510,18 @@ class Milight
     {
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwSetColorToBabyBlue');
+    }
+
+    /**
+    * Sets color of the currently active group to white.
+    */
+    public function rgbwSetColorToWhite()
+    {
+        if ($this->getActiveGroup() == 0) {
+            $this->rgbwAllSetToWhite();
+            return;
+        }
+        $this->command('rgbwGroup'.strval($this->getActiveGroup()).'SetToWhite');
     }
 
     public function rgbwSetColorToAqua()
@@ -843,6 +863,3 @@ class Milight
     }
 
 }
-
-
-
