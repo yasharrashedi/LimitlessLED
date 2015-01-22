@@ -16,6 +16,12 @@ Note (3): RGBW bulbs can't mix RGB and white colors, these bulbs only can operat
 
 Note (4): Web interface is back in new firmware update. You can update the firmware and use web-based interface (by typing IP in browser) to set static IP address.
 
+here's the link to the firmware update file:
+
+[http://www.limitlessled.com/download/LIMITLESSLED_FIRMWARE_UPGRADE_V4_BRIDGE_27Nov2014.bin](http://www.limitlessled.com/download/LIMITLESSLED_FIRMWARE_UPGRADE_V4_BRIDGE_27Nov2014.bin)
+
+Warning: I have updated my Wifi bridge V.4 successfully to this firmware version, but you use this update with your own responsibility.
+
 There are two methods for setting active group one for RGBW bulbs (setRgbwActiveGroup or rgbwSetActiveGroup) and for white bulbs (setWhiteActiveGroup or whiteSetActiveGroup). After setting active channel you will be able to send commands to chosen bulb group.
 
 Bulbs only support 256 colors (not 16 millions) but there is a method for setting RGB hex strings (for example, #FF1254). This is then configured to nearest supported color. It is also possible to provide HSV colors.
