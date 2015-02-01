@@ -12,15 +12,15 @@ Note (2): Brightness (dimming) values for RGBW bulbs are different for white and
 
 Note (3): RGBW bulbs can't mix RGB and white colors, these bulbs only can operate in white or RGB mode so you can't set saturation. Only brightness can be set in RGB mode.
 
-~~Note (4): Since Wifi Bridge V.4 the web interface for Wifi Bridge configuration has been removed and static IP can be set only from mobile app or using AT commands (currently we are working on adding PHP API for configuration and auto bridge discovery)~~
+Note (4): Since Wifi Bridge V.4 the web interface for Wifi Bridge configuration has been removed and static IP can be set only from mobile app or using AT commands (currently we are working on adding PHP API for configuration and auto bridge discovery)
 
-Note (4): Web interface is back in new firmware update. You can update the firmware and use web-based interface (by typing IP in browser) to set static IP address.
+~~Note (4): Web interface is back in new firmware update. You can update the firmware and use web-based interface (by typing IP in browser) to set static IP address.~~
 
-here's the link to the firmware update file:
+~~here's the link to the firmware update file: (the file has been removed from the server!)~~
 
-[http://www.limitlessled.com/download/LIMITLESSLED_FIRMWARE_UPGRADE_V4_BRIDGE_27Nov2014.bin](http://www.limitlessled.com/download/LIMITLESSLED_FIRMWARE_UPGRADE_V4_BRIDGE_27Nov2014.bin)
+~~[http://www.limitlessled.com/download/LIMITLESSLED_FIRMWARE_UPGRADE_V4_BRIDGE_27Nov2014.bin](http://www.limitlessled.com/download/LIMITLESSLED_FIRMWARE_UPGRADE_V4_BRIDGE_27Nov2014.bin)~~
 
-Warning: I have updated my Wifi bridge V.4 successfully to this firmware version, but you use this update on your own responsibility. Recently I've noticed, the update is breaking some incompatible Wifi bridges.
+~~Warning: I have updated my Wifi bridge V.4 successfully to this firmware version, but you use this update on your own responsibility. Recently I've noticed, the update is breaking some incompatible Wifi bridges.~~
 
 There are two methods for setting active group one for RGBW bulbs (setRgbwActiveGroup or rgbwSetActiveGroup) and for white bulbs (setWhiteActiveGroup or whiteSetActiveGroup). After setting active channel you will be able to send commands to chosen bulb group.
 
