@@ -20,7 +20,7 @@ here's the link to the firmware update file:
 
 [http://www.limitlessled.com/download/LIMITLESSLED_FIRMWARE_UPGRADE_V4_BRIDGE_27Nov2014.bin](http://www.limitlessled.com/download/LIMITLESSLED_FIRMWARE_UPGRADE_V4_BRIDGE_27Nov2014.bin)
 
-Warning: I have updated my Wifi bridge V.4 successfully to this firmware version, but you use this update on your own responsibility. Recently I've noticed, update is breaking some Wifi bridges.
+Warning: I have updated my Wifi bridge V.4 successfully to this firmware version, but you use this update on your own responsibility. Recently I've noticed, update is breaking some incompatible Wifi bridges.
 
 There are two methods for setting active group one for RGBW bulbs (setRgbwActiveGroup or rgbwSetActiveGroup) and for white bulbs (setWhiteActiveGroup or whiteSetActiveGroup). After setting active channel you will be able to send commands to chosen bulb group.
 
