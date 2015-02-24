@@ -44,6 +44,11 @@ class Milight
         'rgbwGroup2Off' => array(0x48, 0x00),
         'rgbwGroup3Off' => array(0x4a, 0x00),
         'rgbwGroup4Off' => array(0x4c, 0x00),
+        'rgbwAllNightMode' => array(0xC1, 0x00),
+        'rgbwGroup1NightMode' => array(0xC6, 0x00),
+        'rgbwGroup2NightMode' => array(0xC8, 0x00),
+        'rgbwGroup3NightMode' => array(0xCA, 0x00),
+        'rgbwGroup4NightMode' => array(0xCC, 0x00),
         'rgbwBrightnessMax' => array(0x4e, 0x1b),
         'rgbwBrightnessMin' => array(0x4e, 0x02),
         'rgbwDiscoMode' => array(0x4d, 0x00),
@@ -275,6 +280,36 @@ class Milight
     public function rgbwGroup4Off()
     {
         $this->command('rgbwGroup4Off');
+    }
+    
+    public function rgbwAllNightMode()
+    {
+        $this->command('rgbwAlloff');
+        $this->command('rgbwAllNightMode');
+    }
+    
+    public function rgbwGroup1NightMode()
+    {
+        $this->command('rgbwGroup1off');
+        $this->command('rgbwGroup1NightMode');
+    }
+    
+    public function rgbwGroup2NightMode()
+    {
+        $this->command('rgbwGroup2off');
+        $this->command('rgbwGroup2NightMode');
+    }
+    
+    public function rgbwGroup3NightMode()
+    {
+        $this->command('rgbwGroup3off');
+        $this->command('rgbwGroup3NightMode');
+    }
+    
+    public function rgbwGroup4NightMode()
+    {
+        $this->command('rgbwGroup4off');
+        $this->command('rgbwGroup4NightMode');
     }
 
     public function rgbwBrightnessMax()
