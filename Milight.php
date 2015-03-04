@@ -284,31 +284,31 @@ class Milight
     
     public function rgbwAllNightMode()
     {
-        $this->command('rgbwAlloff');
+        $this->rgbwAlloff();
         $this->command('rgbwAllNightMode');
     }
     
     public function rgbwGroup1NightMode()
     {
-        $this->command('rgbwGroup1off');
+        $this->rgbwGroup1off();
         $this->command('rgbwGroup1NightMode');
     }
     
     public function rgbwGroup2NightMode()
     {
-        $this->command('rgbwGroup2off');
+        $this->rgbwGroup2off();
         $this->command('rgbwGroup2NightMode');
     }
     
     public function rgbwGroup3NightMode()
     {
-        $this->command('rgbwGroup3off');
+        $this->rgbwGroup3off();
         $this->command('rgbwGroup3NightMode');
     }
     
     public function rgbwGroup4NightMode()
     {
-        $this->command('rgbwGroup4off');
+        $this->rgbwGroup4off();
         $this->command('rgbwGroup4NightMode');
     }
 
