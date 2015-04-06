@@ -23,10 +23,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
 */
-
 class Milight
 {
-
     private $host;
     private $port;
     private $delay = 100000; //microseconds
@@ -75,8 +73,6 @@ class Milight
         'rgbwSetColorToFusia' => array(0x40, 0xd0),
         'rgbwSetColorToLilac' => array(0x40, 0xe0),
         'rgbwSetColorToLavendar' => array(0x40, 0xf0),
-
-
         // White Bulb commands
         'whiteAllOn' => array(0x35, 0x00),
         'whiteAllOff' => array(0x39, 0x00),
@@ -87,11 +83,11 @@ class Milight
         'whiteWarmIncrease' => array(0x3e, 0x00),
         'whiteCoolIncrease' => array(0x3f, 0x00),
         'whiteGroup1On' => array(0x38, 0x00),
-        'whiteGroup1Off' => array(0x3b, 0x00),
+	        'whiteGroup1Off' => array(0x3b, 0x00),
         'whiteGroup2On' => array(0x3d, 0x00),
         'whiteGroup2Off' => array(0x33, 0x00),
-        'whiteGroup3On' => array(0x3a, 0x00),
-        'whiteGroup3Off' => array(0x32, 0x00),
+        'whiteGroup3On' => array(0x37, 0x00),
+        'whiteGroup3Off' => array(0x3a, 0x00),
         'whiteGroup4On' => array(0x32, 0x00),
         'whiteGroup4Off' => array(0x36, 0x00),
         'whiteGroup1BrightnessMax' => array(0xb8, 0x00),
@@ -102,9 +98,7 @@ class Milight
         'whiteGroup2NightMode' => array(0xb3, 0x00),
         'whiteGroup3NightMode' => array(0xba, 0x00),
         'whiteGroup4NightMode' => array(0xb6, 0x00),
-
     );
-
     /**
      * @param int $delay
      */
@@ -112,7 +106,6 @@ class Milight
     {
         $this->delay = $delay;
     }
-
     /**
      * @return int
      */
@@ -120,8 +113,6 @@ class Milight
     {
         return $this->delay;
     }
-
-
     /**
      * @param int $rgbwActiveGroup
      * @throws Exception
@@ -133,8 +124,6 @@ class Milight
         }
         $this->rgbwActiveGroup = $rgbwActiveGroup;
     }
-
-
     // Same as setRgbwActiveGroup. Exists just to make method invocation easier according to the convention
     /**
     * @param int $rgbwActiveGroup
@@ -144,7 +133,6 @@ class Milight
     {
         $this->setRgbwActiveGroup($rgbwActiveGroup);
     }
-
     /**
      * @throws Exception
      * @return int
@@ -153,8 +141,6 @@ class Milight
     {
         return $this->rgbwActiveGroup;
     }
-
-
     /**
      * @param int $whiteActiveGroup
      * @throws Exception
@@ -166,7 +152,6 @@ class Milight
         }
         $this->whiteActiveGroup = $whiteActiveGroup;
     }
-
     // Same as setWhiteActiveGroup. Exists just to make method invocation easier according to the convention
     /**
     * @param int $whiteActiveGroup
@@ -176,7 +161,6 @@ class Milight
     {
         $this->setWhiteActiveGroup($whiteActiveGroup);
     }
-
     /**
      * @throws Exception
      * @return int
@@ -186,29 +170,41 @@ class Milight
         return $this->whiteActiveGroup;
     }
 
-    public function __construct($host = '10.10.100.254', $port = 8899)
+    public function __construct($host = '', $port = 8899)
     {
-        $this->host = $host;
-        $this->port = $port;
+	//if host is null. then we want to automatically set it to the broadcast address
+	// NB: this function will assume that your home network is using /24 subnet mask!
+	if($host == '')
+	{
+		$ip = $_SERVER['SERVER_ADDR'];
+		echo $ip;
+		list($w, $x, $y, $z) = explode('.', $ip);
+		$host = $w  . "." . $x . "." . $y . ".255";
+		$this->host = $host;
+		$this->port = $port;
+		echo $this->host;
+	}
+	else
+	{
+        	$this->host = $host;
+	        $this->port = $port;
+	}
     }
-
-
     public function sendCommand(Array $command)
     {
         $command[] = 0x55; // last byte is always 0x55, will be appended to all commands
         $message = vsprintf(str_repeat('%c', count($command)), $command);
         if ($socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP)) {
+	    socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);
             socket_sendto($socket, $message, strlen($message), 0, $this->host, $this->port);
             socket_close($socket);
             usleep($this->getDelay()); //wait 100ms before sending next command
         }
     }
-
     public function command($commandName)
     {
         $this->sendCommand($this->commandCodes[$commandName]);
     }
-
     public function rgbwSendOnToActiveGroup()
     {
         if ($this->getRgbwActiveGroup() > 0) {
@@ -219,7 +215,6 @@ class Milight
         $this->rgbwAllOn();
         return true;
     }
-
     public function whiteSendOnToActiveGroup()
     {
         if ($this->getWhiteActiveGroup() > 0) {
@@ -230,53 +225,42 @@ class Milight
         $this->whiteAllOn();
         return true;
     }
-
-
     public function rgbwAllOn()
     {
         $this->command('rgbwAllOn');
     }
-
     public function rgbwAllOff()
     {
         $this->command('rgbwAllOff');
     }
-
     public function rgbwGroup1On()
     {
         $this->command('rgbwGroup1On');
     }
-
     public function rgbwGroup2On()
     {
         $this->command('rgbwGroup2On');
     }
-
     public function rgbwGroup3On()
     {
         $this->command('rgbwGroup3On');
     }
-
     public function rgbwGroup4On()
     {
         $this->command('rgbwGroup4On');
     }
-
     public function rgbwGroup1Off()
     {
         $this->command('rgbwGroup1Off');
     }
-
     public function rgbwGroup2Off()
     {
         $this->command('rgbwGroup2Off');
     }
-
     public function rgbwGroup3Off()
     {
         $this->command('rgbwGroup3Off');
     }
-
     public function rgbwGroup4Off()
     {
         $this->command('rgbwGroup4Off');
@@ -284,117 +268,103 @@ class Milight
     
     public function rgbwAllNightMode()
     {
-        $this->command('rgbwAlloff');
+        $this->rgbwAlloff();
         $this->command('rgbwAllNightMode');
     }
     
     public function rgbwGroup1NightMode()
     {
-        $this->command('rgbwGroup1off');
+        $this->rgbwGroup1off();
         $this->command('rgbwGroup1NightMode');
     }
     
     public function rgbwGroup2NightMode()
     {
-        $this->command('rgbwGroup2off');
+        $this->rgbwGroup2off();
         $this->command('rgbwGroup2NightMode');
     }
     
     public function rgbwGroup3NightMode()
     {
-        $this->command('rgbwGroup3off');
+        $this->rgbwGroup3off();
         $this->command('rgbwGroup3NightMode');
     }
     
     public function rgbwGroup4NightMode()
     {
-        $this->command('rgbwGroup4off');
+        $this->rgbwGroup4off();
         $this->command('rgbwGroup4NightMode');
     }
-
     public function rgbwBrightnessMax()
     {
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwBrightnessMax');
     }
-
     public function rgbwBrightnessMin()
     {
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwBrightnessMin');
     }
-
     public function rgbwAllBrightnessMin()
     {
         $this->setRgbwActiveGroup(0);
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwBrightnessMin');
     }
-
     public function rgbwAllBrightnessMax()
     {
         $this->setRgbwActiveGroup(0);
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwBrightnessMax');
     }
-
     public function rgbwGroup1BrightnessMax()
     {
         $this->setRgbwActiveGroup(1);
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwBrightnessMax');
     }
-
     public function rgbwGroup2BrightnessMax()
     {
         $this->setRgbwActiveGroup(2);
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwBrightnessMax');
     }
-
     public function rgbwGroup3BrightnessMax()
     {
         $this->setRgbwActiveGroup(3);
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwBrightnessMax');
     }
-
     public function rgbwGroup4BrightnessMax()
     {
         $this->setRgbwActiveGroup(4);
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwBrightnessMax');
     }
-
     public function rgbwGroup1BrightnessMin()
     {
         $this->setRgbwActiveGroup(1);
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwBrightnessMin');
     }
-
     public function rgbwGroup2BrightnessMin()
     {
         $this->setRgbwActiveGroup(2);
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwBrightnessMin');
     }
-
     public function rgbwGroup3BrightnessMin()
     {
         $this->setRgbwActiveGroup(3);
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwBrightnessMin');
     }
-
     public function rgbwGroup4BrightnessMin()
     {
         $this->setRgbwActiveGroup(4);
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwBrightnessMin');
     }
-
-
     public function rgbwBrightnessPercent($brightnessPercent)
     {
         if ($brightnessPercent < 0 || $brightnessPercent > 100) {
@@ -480,73 +450,58 @@ class Milight
         if ($brightnessPercent >= 96 && $brightnessPercent <= 100) {
             $brightness = 0x1b;
         }
-
         $this->sendCommand(array(0x4e, $brightness));
-
     }
-
-
     public function rgbwDiscoMode()
     {
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwDiscoMode');
     }
-
     public function rgbwDiscoSlower()
     {
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwDiscoSlower');
     }
-
     public function rgbwDiscoFaster()
     {
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwDiscoFaster');
     }
-
     public function rgbwAllSetToWhite()
     {
         $this->command('rgbwAllSetToWhite');
     }
-
     public function rgbwGroup1SetToWhite()
     {
         $this->command('rgbwGroup1SetToWhite');
     }
-
     public function rgbwGroup2SetToWhite()
     {
         $this->command('rgbwGroup2SetToWhite');
     }
-
     public function rgbwGroup3SetToWhite()
     {
         $this->command('rgbwGroup3SetToWhite');
     }
-
     public function rgbwGroup4SetToWhite()
     {
         $this->command('rgbwGroup4SetToWhite');
     }
-
     public function rgbwSetColorToViolet()
     {
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwSetColorToViolet');
     }
-
     public function rgbwSetColorToRoyalBlue()
     {
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwSetColorToRoyalBlue');
     }
-
     public function rgbwSetColorToBabyBlue()
     {
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwSetColorToBabyBlue');
     }
-
     /**
     * Sets color of the currently active group to white.
     */
@@ -558,112 +513,93 @@ class Milight
         }
         $this->command('rgbwGroup'.strval($this->getActiveGroup()).'SetToWhite');
     }
-
     public function rgbwSetColorToAqua()
     {
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwSetColorToAqua');
     }
-
     public function rgbwSetColorToRoyalMint()
     {
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwSetColorToRoyalMint');
     }
-
     public function rgbwSetColorToSeafoamGreen()
     {
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwSetColorToSeafoamGreen');
     }
-
     public function rgbwSetColorToGreen()
     {
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwSetColorToGreen');
     }
-
     public function rgbwSetColorToLimeGreen()
     {
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwSetColorToLimeGreen');
     }
-
     public function rgbwSetColorToYellow()
     {
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwSetColorToYellow');
     }
-
     public function rgbwSetColorToYellowOrange()
     {
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwSetColorToYellowOrange');
     }
-
     public function rgbwSetColorToOrange()
     {
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwSetColorToOrange');
     }
-
     public function rgbwSetColorToRed()
     {
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwSetColorToRed');
     }
-
     public function rgbwSetColorToPink()
     {
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwSetColorToPink');
     }
-
     public function rgbwSetColorToFusia()
     {
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwSetColorToFusia');
     }
-
     public function rgbwSetColorToLilac()
     {
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwSetColorToLilac');
     }
-
     public function rgbwSetColorToLavendar()
     {
         $this->rgbwSendOnToActiveGroup();
         $this->command('rgbwSetColorToLavendar');
     }
-
     public function whiteAllOn()
     {
         $this->command('whiteAllOn');
     }
-
     public function whiteAllOff()
     {
         $this->command('whiteAllOff');
     }
-
     public function whiteBrightnessUp()
     {
         $this->whiteSendOnToActiveGroup();
         $this->command('whiteBrightnessUp');
     }
-
     public function whiteBrightnessDown()
     {
         $this->whiteSendOnToActiveGroup();
         $this->command('whiteBrightnessDown');
     }
-
     public function whiteAllBrightnessMax()
     {
         $this->command('whiteAllBrightnessMax');
     }
-
     public function whiteAllBrightnessMin()
     {
         $this->setWhiteActiveGroup(0);
@@ -671,87 +607,69 @@ class Milight
         for ($i = 0; $i < 10; $i++) {
             $this->command('whiteBrightnessDown');
         }
-
     }
-
     public function whiteAllNightMode()
     {
         $this->command('whiteAllNightMode');
     }
-
-
     public function whiteWarmIncrease()
     {
         $this->whiteSendOnToActiveGroup();
         $this->command('whiteWarmIncrease');
     }
-
     public function whiteCoolIncrease()
     {
         $this->whiteSendOnToActiveGroup();
         $this->command('whiteCoolIncrease');
     }
-
     public function whiteGroup1On()
     {
         $this->command('whiteGroup1On');
     }
-
     public function whiteGroup1Off()
     {
         $this->command('whiteGroup1Off');
     }
-
     public function whiteGroup2On()
     {
         $this->command('whiteGroup2On');
     }
-
     public function whiteGroup2Off()
     {
         $this->command('whiteGroup2Off');
     }
-
     public function whiteGroup3On()
     {
         $this->command('whiteGroup3On');
     }
-
     public function whiteGroup3Off()
     {
         $this->command('whiteGroup3Off');
     }
-
     public function whiteGroup4On()
     {
         $this->command('whiteGroup4On');
     }
-
     public function whiteGroup4Off()
     {
         $this->command('whiteGroup4Off');
     }
-
     public function whiteGroup1BrightnessMax()
     {
         $this->command('whiteGroup1BrightnessMax');
     }
-
     public function whiteGroup2BrightnessMax()
     {
         $this->command('whiteGroup2BrightnessMax');
     }
-
     public function whiteGroup3BrightnessMax()
     {
         $this->command('whiteGroup3BrightnessMax');
     }
-
     public function whiteGroup4BrightnessMax()
     {
         $this->command('whiteGroup4BrightnessMax');
     }
-
     public function whiteGroup1BrightnessMin()
     {
         $this->setWhiteActiveGroup(1);
@@ -760,7 +678,6 @@ class Milight
             $this->command('whiteBrightnessDown');
         }
     }
-
     public function whiteGroup2BrightnessMin()
     {
         $this->setWhiteActiveGroup(2);
@@ -769,7 +686,6 @@ class Milight
             $this->command('whiteBrightnessDown');
         }
     }
-
     public function whiteGroup3BrightnessMin()
     {
         $this->setWhiteActiveGroup(3);
@@ -778,7 +694,6 @@ class Milight
             $this->command('whiteBrightnessDown');
         }
     }
-
     public function whiteGroup4BrightnessMin()
     {
         $this->setWhiteActiveGroup(4);
@@ -787,27 +702,22 @@ class Milight
             $this->command('whiteBrightnessDown');
         }
     }
-
     public function whiteGroup1NightMode()
     {
         $this->command('whiteGroup1NightMode');
     }
-
     public function whiteGroup2NightMode()
     {
         $this->command('whiteGroup2NightMode');
     }
-
     public function whiteGroup3NightMode()
     {
         $this->command('whiteGroup3NightMode');
     }
-
     public function whiteGroup4NightMode()
     {
         $this->command('whiteGroup4NightMode');
     }
-
     public function rgbwSetColorHsv(Array $hsvColor)
     {
         $milightColor = $this->hslToMilightColor($hsvColor);
@@ -815,8 +725,6 @@ class Milight
         $this->command($activeGroupOnCommand);
         $this->sendCommand(array(0x40, $milightColor));
     }
-
-
     public function rgbwSetColorHexString($color)
     {
         $rgb = $this->rgbHexToIntArray($color);
@@ -825,12 +733,9 @@ class Milight
         $this->rgbwSendOnToActiveGroup();
         $this->sendCommand(array(0x40, $milightColor));
     }
-
-
     public function rgbHexToIntArray($hexColor)
     {
         $hexColor = ltrim($hexColor, '#');
-
         $hexColorLenghth = strlen($hexColor);
         if ($hexColorLenghth != 8 && $hexColorLenghth != 6) {
             throw new \Exception('Color hex code must match 8 or 6 characters');
@@ -844,7 +749,6 @@ class Milight
             }
             return array($r, $g, $b);
         }
-
         $r = hexdec(substr($hexColor, 0, 2));
         $g = hexdec(substr($hexColor, 2, 2));
         $b = hexdec(substr($hexColor, 4, 2));
@@ -853,8 +757,6 @@ class Milight
         }
         return array($r, $g, $b);
     }
-
-
     public function rgbToHsl($r, $g, $b)
     {
         $r = $r / 255;
@@ -865,12 +767,10 @@ class Milight
         $l = ($max + $min) / 2;
         $d = $max - $min;
         $h = '';
-
         if ($d == 0) {
             $h = $s = 0;
         } else {
             $s = $d / (1 - abs(2 * $l - 1));
-
             switch ($max) {
                 case $r:
                     $h = 60 * fmod((($g - $b) / $d), 6);
@@ -878,11 +778,9 @@ class Milight
                         $h += 360;
                     }
                     break;
-
                 case $g:
                     $h = 60 * (($b - $r) / $d + 2);
                     break;
-
                 case $b:
                     $h = 60 * (($r - $g) / $d + 4);
                     break;
@@ -890,11 +788,9 @@ class Milight
         }
         return array($h, $s, $l);
     }
-
     public function hslToMilightColor($hsl)
     {
         $color = (256 + 176 - (int)($hsl[0] / 360.0 * 255.0)) % 256;
         return $color + 0xfa;
     }
-
 }
