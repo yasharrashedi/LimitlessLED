@@ -231,6 +231,11 @@ class Milight
       $this->command($activeGroupOffCommand);
     }
 
+    public function rgbwSetGroupToWhite($group) {
+      $activeCommand = 'rgbwGroup' . $group . 'SetToWhite';
+      $this->command($activeCommand);
+    }
+
     public function whiteSendOnToActiveGroup()
     {
         if ($this->getWhiteActiveGroup() > 0) {
