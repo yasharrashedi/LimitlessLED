@@ -209,16 +209,15 @@ class Milight
         $this->sendCommand($this->commandCodes[$commandName]);
     }
 
-    public function rgbwSendOnToActiveGroup()
-    {
-        if ($this->getRgbwActiveGroup() > 0) {
-            $activeGroupOnCommand = 'rgbwGroup' . $this->getRgbwActiveGroup() . 'On';
-            $this->command($activeGroupOnCommand);
-            return true;
-        }
-        $this->rgbwAllOn();
-        return true;
+    public function rgbwSendOnToActiveGroup() {
+      $this->rgbwSendOnToGroup($this->getRgbwActiveGroup());
     }
+
+    public function rgbwSendOnToGroup($group) {
+      $activeGroupOnCommand = 'rgbwGroup' . $group . 'On';
+      $this->command($activeGroupOnCommand);
+    }
+
 
     public function whiteSendOnToActiveGroup()
     {
