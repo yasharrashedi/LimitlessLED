@@ -173,12 +173,8 @@ class Milight
      * @param int $whiteActiveGroup
      * @throws Exception
      */
-    public function setWhiteActiveGroup($whiteActiveGroup)
-    {
-        if ($whiteActiveGroup < 0 || $whiteActiveGroup > 4) {
-            throw new \Exception('Active White Group must be between or equal 0 to 4, note: 0 means all groups');
-        }
-        $this->whiteActiveGroup = $whiteActiveGroup;
+    public function setWhiteActiveGroup($whiteActiveGroup) {
+      $this->whiteActiveGroup = $this->setActiveGroup($whiteActiveGroup);
     }
 
     // Same as setWhiteActiveGroup. Exists just to make method invocation easier according to the convention
