@@ -410,97 +410,15 @@ class Milight
         $this->command('rgbwBrightnessMin');
     }
 
-
-    public function rgbwBrightnessPercent($brightnessPercent)
-    {
-        if ($brightnessPercent < 0 || $brightnessPercent > 100) {
-            throw new \Exception('Brightness percent must be between 0 and 100');
-        }
-        $brightness = 0x02;
-        $this->rgbwSendOnToActiveGroup();
-        if ($brightnessPercent < 14) {
-            $brightness = 0x02;
-        }
-        if ($brightnessPercent >= 14 && $brightnessPercent < 17) {
-            $brightness = 0x03;
-        }
-        if ($brightnessPercent >= 17 && $brightnessPercent < 21) {
-            $brightness = 0x04;
-        }
-        if ($brightnessPercent >= 21 && $brightnessPercent < 24) {
-            $brightness = 0x05;
-        }
-        if ($brightnessPercent >= 24 && $brightnessPercent < 28) {
-            $brightness = 0x06;
-        }
-        if ($brightnessPercent >= 28 && $brightnessPercent < 32) {
-            $brightness = 0x07;
-        }
-        if ($brightnessPercent >= 32 && $brightnessPercent < 35) {
-            $brightness = 0x08;
-        }
-        if ($brightnessPercent >= 35 && $brightnessPercent < 39) {
-            $brightness = 0x09;
-        }
-        if ($brightnessPercent >= 39 && $brightnessPercent < 42) {
-            $brightness = 0xa0;
-        }
-        if ($brightnessPercent >= 42 && $brightnessPercent < 46) {
-            $brightness = 0xb0;
-        }
-        if ($brightnessPercent >= 46 && $brightnessPercent < 50) {
-            $brightness = 0xc0;
-        }
-        if ($brightnessPercent >= 50 && $brightnessPercent < 53) {
-            $brightness = 0xd0;
-        }
-        if ($brightnessPercent >= 53 && $brightnessPercent < 57) {
-            $brightness = 0xe0;
-        }
-        if ($brightnessPercent >= 57 && $brightnessPercent < 60) {
-            $brightness = 0xf0;
-        }
-        if ($brightnessPercent >= 60 && $brightnessPercent < 64) {
-            $brightness = 0x10;
-        }
-        if ($brightnessPercent >= 64 && $brightnessPercent < 68) {
-            $brightness = 0x11;
-        }
-        if ($brightnessPercent >= 68 && $brightnessPercent < 71) {
-            $brightness = 0x12;
-        }
-        if ($brightnessPercent >= 71 && $brightnessPercent < 75) {
-            $brightness = 0x13;
-        }
-        if ($brightnessPercent >= 75 && $brightnessPercent < 78) {
-            $brightness = 0x14;
-        }
-        if ($brightnessPercent >= 78 && $brightnessPercent < 82) {
-            $brightness = 0x15;
-        }
-        if ($brightnessPercent >= 82 && $brightnessPercent < 86) {
-            $brightness = 0x16;
-        }
-        if ($brightnessPercent >= 86 && $brightnessPercent < 89) {
-            $brightness = 0x17;
-        }
-        if ($brightnessPercent >= 89 && $brightnessPercent < 93) {
-            $brightness = 0x18;
-        }
-        if ($brightnessPercent >= 93 && $brightnessPercent < 96) {
-            $brightness = 0x19;
-        }
-        if ($brightnessPercent >= 96 && $brightnessPercent < 100) {
-            $brightness = 0x1a;
-        }
-        if ($brightnessPercent >= 96 && $brightnessPercent <= 100) {
-            $brightness = 0x1b;
-        }
-
-        $this->sendCommand(array(0x4e, $brightness));
-
+    public function rgbwBrightnessPercent($brightnessPercent,$group=null) {
+      if ($brightnessPercent < 0 || $brightnessPercent > 100) {
+	throw new \Exception('Brightness percent must be between 0 and 100');
+      }
+      $brightnessPercent = round(2+(($brightnessPercent/100)*25));
+      $group = isset($group) ? $group : $this->getRgbwActiveGroup();
+      $this->rgbwSendOnToGroup($group);
+      $this->sendCommand(array(0x4e, $brightnessPercent));
     }
-
 
     public function rgbwDiscoMode()
     {
