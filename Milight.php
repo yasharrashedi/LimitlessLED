@@ -240,6 +240,16 @@ class Milight
       $this->command($activeCommand);
     }
 
+    public function whiteSendOnToGroup($group) {
+      $activeGroupOnCommand = 'whiteGroup' . $group . 'On';
+      $this->command($activeGroupOnCommand);
+    }
+    
+    public function whiteSendOffToGroup($group) {
+      $activeGroupOffCommand = 'whiteGroup' . $group . 'Off';
+      $this->command($activeGroupOffCommand);
+    }
+
     public function whiteSendOnToActiveGroup()
     {
         if ($this->getWhiteActiveGroup() > 0) {
