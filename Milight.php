@@ -131,7 +131,7 @@ class Milight
     }
 
     public function setRepeats($repeats) {
-      $this->command_repeats = $repeats
+      $this->command_repeats = $repeats;
     }
     /**
      * @param int $rgbwActiveGroup
