@@ -145,14 +145,9 @@ class Milight
      * @param int $rgbwActiveGroup
      * @throws Exception
      */
-    public function setRgbwActiveGroup($rgbwActiveGroup)
-    {
-        if ($rgbwActiveGroup < 0 || $rgbwActiveGroup > 4) {
-            throw new \Exception('Active RGBW group must be between 0 and 4. 0 means all groups');
-        }
-        $this->rgbwActiveGroup = $rgbwActiveGroup;
+    public function setRgbwActiveGroup($rgbwActiveGroup) {
+      $this->rgbwActiveGroup = $this->setActiveGroup($rgbwActiveGroup);
     }
-
 
     // Same as setRgbwActiveGroup. Exists just to make method invocation easier according to the convention
     /**
