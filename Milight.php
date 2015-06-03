@@ -84,8 +84,12 @@ class Milight
         // White Bulb commands
         'whiteAllOn' => array(0x35, 0x00),
         'whiteAllOff' => array(0x39, 0x00),
+	'whiteGroup0On' => array(0x35, 0x00),
+	'whiteGroup0Off' => array(0x39, 0x00),
         'whiteBrightnessUp' => array(0x3c, 0x00),
         'whiteBrightnessDown' => array(0x34, 0x00),
+	'whiteGroup0BrightnessMax' => array(0xb5, 0x00),
+	'whiteGroup0NightMode' => array(0xbb, 0x00),
         'whiteAllBrightnessMax' => array(0xb5, 0x00),
         'whiteAllNightMode' => array(0xbb, 0x00),
         'whiteWarmIncrease' => array(0x3e, 0x00),
@@ -222,6 +226,10 @@ class Milight
       $this->command($activeGroupOnCommand);
     }
 
+    public function rgbwSendOffToGroup($group) {
+      $activeGroupOffCommand = 'rgbwGroup' . $group . 'Off';
+      $this->command($activeGroupOffCommand);
+    }
 
     public function whiteSendOnToActiveGroup()
     {
