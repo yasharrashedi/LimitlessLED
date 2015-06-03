@@ -133,7 +133,15 @@ class Milight
     public function setRepeats($repeats) {
       $this->command_repeats = $repeats;
     }
-    /**
+
+    private function setActiveGroup($Group) {
+      if ($Group < 0 || $Group > 4) {
+	throw new \Exception('Active group must be between 0 and 4. 0 means all groups');
+      }
+      return $Group;
+    }
+
+     /**
      * @param int $rgbwActiveGroup
      * @throws Exception
      */
