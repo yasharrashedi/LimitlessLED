@@ -29,7 +29,8 @@ class Milight
 
     private $host;
     private $port;
-    private $delay = 100000; //microseconds
+    private $delay = 10000; //microseconds
+    private $command_repeats = 10;
     private $rgbwActiveGroup = 0; // 0 means all
     private $whiteActiveGroup = 0; // 0 means all
     private $commandCodes = array(
@@ -129,7 +130,9 @@ class Milight
         return $this->delay;
     }
 
-
+    public function setRepeats($repeats) {
+      $this->command_repeats = $repeats
+    }
     /**
      * @param int $rgbwActiveGroup
      * @throws Exception
