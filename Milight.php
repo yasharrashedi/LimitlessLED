@@ -29,13 +29,16 @@ class Milight
 
     private $host;
     private $port;
-    private $delay = 100000; //microseconds
+    private $delay = 10000; //microseconds
+    private $command_repeats = 10;
     private $rgbwActiveGroup = 0; // 0 means all
     private $whiteActiveGroup = 0; // 0 means all
     private $commandCodes = array(
         //RGBW Bulb commands
         'rgbwAllOn' => array(0x42, 0x00),
         'rgbwAllOff' => array(0x41, 0x00),
+	'rgbwGroup0Off' => array(0x41, 0x00),
+	'rgbwGroup0On' => array(0x42, 0x00),
         'rgbwGroup1On' => array(0x45, 0x00),
         'rgbwGroup2On' => array(0x47, 0x00),
         'rgbwGroup3On' => array(0x49, 0x00),
@@ -45,6 +48,7 @@ class Milight
         'rgbwGroup3Off' => array(0x4a, 0x00),
         'rgbwGroup4Off' => array(0x4c, 0x00),
         'rgbwAllNightMode' => array(0xC1, 0x00),
+        'rgbwGroup0NightMode' => array(0xC1, 0x00),
         'rgbwGroup1NightMode' => array(0xC6, 0x00),
         'rgbwGroup2NightMode' => array(0xC8, 0x00),
         'rgbwGroup3NightMode' => array(0xCA, 0x00),
@@ -55,6 +59,7 @@ class Milight
         'rgbwDiscoSlower' => array(0x43, 0x00),
         'rgbwDiscoFaster' => array(0x44, 0x00),
         'rgbwAllSetToWhite' => array(0xc2, 0x00),
+	'rgbwGroup0SetToWhite' => array(0xc2, 0x00),
         'rgbwGroup1SetToWhite' => array(0xc5, 0x00),
         'rgbwGroup2SetToWhite' => array(0xc7, 0x00),
         'rgbwGroup3SetToWhite' => array(0xc9, 0x00),
@@ -80,8 +85,12 @@ class Milight
         // White Bulb commands
         'whiteAllOn' => array(0x35, 0x00),
         'whiteAllOff' => array(0x39, 0x00),
+	'whiteGroup0On' => array(0x35, 0x00),
+	'whiteGroup0Off' => array(0x39, 0x00),
         'whiteBrightnessUp' => array(0x3c, 0x00),
         'whiteBrightnessDown' => array(0x34, 0x00),
+	'whiteGroup0BrightnessMax' => array(0xb5, 0x00),
+	'whiteGroup0NightMode' => array(0xbb, 0x00),
         'whiteAllBrightnessMax' => array(0xb5, 0x00),
         'whiteAllNightMode' => array(0xbb, 0x00),
         'whiteWarmIncrease' => array(0x3e, 0x00),
@@ -121,19 +130,24 @@ class Milight
         return $this->delay;
     }
 
+    public function setRepeats($repeats) {
+      $this->command_repeats = $repeats;
+    }
 
-    /**
+    private function setActiveGroup($Group) {
+      if ($Group < 0 || $Group > 4) {
+	throw new \Exception('Active group must be between 0 and 4. 0 means all groups');
+      }
+      return $Group;
+    }
+
+     /**
      * @param int $rgbwActiveGroup
      * @throws Exception
      */
-    public function setRgbwActiveGroup($rgbwActiveGroup)
-    {
-        if ($rgbwActiveGroup < 0 || $rgbwActiveGroup > 4) {
-            throw new \Exception('Active RGBW group must be between 0 and 4. 0 means all groups');
-        }
-        $this->rgbwActiveGroup = $rgbwActiveGroup;
+    public function setRgbwActiveGroup($rgbwActiveGroup) {
+      $this->rgbwActiveGroup = $this->setActiveGroup($rgbwActiveGroup);
     }
-
 
     // Same as setRgbwActiveGroup. Exists just to make method invocation easier according to the convention
     /**
@@ -159,12 +173,8 @@ class Milight
      * @param int $whiteActiveGroup
      * @throws Exception
      */
-    public function setWhiteActiveGroup($whiteActiveGroup)
-    {
-        if ($whiteActiveGroup < 0 || $whiteActiveGroup > 4) {
-            throw new \Exception('Active White Group must be between or equal 0 to 4, note: 0 means all groups');
-        }
-        $this->whiteActiveGroup = $whiteActiveGroup;
+    public function setWhiteActiveGroup($whiteActiveGroup) {
+      $this->whiteActiveGroup = $this->setActiveGroup($whiteActiveGroup);
     }
 
     // Same as setWhiteActiveGroup. Exists just to make method invocation easier according to the convention
@@ -197,11 +207,13 @@ class Milight
     {
         $command[] = 0x55; // last byte is always 0x55, will be appended to all commands
         $message = vsprintf(str_repeat('%c', count($command)), $command);
-        if ($socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP)) {
+	for($repetition=0; $repetition<$this->command_repeats; $repetition++) {
+	  if ($socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP)) {
             socket_sendto($socket, $message, strlen($message), 0, $this->host, $this->port);
             socket_close($socket);
             usleep($this->getDelay()); //wait 100ms before sending next command
-        }
+	  }
+	}
     }
 
     public function command($commandName)
@@ -209,28 +221,38 @@ class Milight
         $this->sendCommand($this->commandCodes[$commandName]);
     }
 
-    public function rgbwSendOnToActiveGroup()
-    {
-        if ($this->getRgbwActiveGroup() > 0) {
-            $activeGroupOnCommand = 'rgbwGroup' . $this->getRgbwActiveGroup() . 'On';
-            $this->command($activeGroupOnCommand);
-            return true;
-        }
-        $this->rgbwAllOn();
-        return true;
+    public function rgbwSendOnToActiveGroup() {
+      $this->rgbwSendOnToGroup($this->getRgbwActiveGroup());
     }
 
-    public function whiteSendOnToActiveGroup()
-    {
-        if ($this->getWhiteActiveGroup() > 0) {
-            $activeGroupOnCommand = 'whiteGroup' . $this->getWhiteActiveGroup() . 'On';
-            $this->command($activeGroupOnCommand);
-            return true;
-        }
-        $this->whiteAllOn();
-        return true;
+    public function rgbwSendOnToGroup($group) {
+      $activeGroupOnCommand = 'rgbwGroup' . $group . 'On';
+      $this->command($activeGroupOnCommand);
     }
 
+    public function rgbwSendOffToGroup($group) {
+      $activeGroupOffCommand = 'rgbwGroup' . $group . 'Off';
+      $this->command($activeGroupOffCommand);
+    }
+
+    public function rgbwSetGroupToWhite($group) {
+      $activeCommand = 'rgbwGroup' . $group . 'SetToWhite';
+      $this->command($activeCommand);
+    }
+
+    public function whiteSendOnToGroup($group) {
+      $activeGroupOnCommand = 'whiteGroup' . $group . 'On';
+      $this->command($activeGroupOnCommand);
+    }
+    
+    public function whiteSendOffToGroup($group) {
+      $activeGroupOffCommand = 'whiteGroup' . $group . 'Off';
+      $this->command($activeGroupOffCommand);
+    }
+
+    public function whiteSendOnToActiveGroup() {
+      $this->whiteSendOnToGroup($this->getWhiteActiveGroup());
+    }
 
     public function rgbwAllOn()
     {
@@ -394,97 +416,15 @@ class Milight
         $this->command('rgbwBrightnessMin');
     }
 
-
-    public function rgbwBrightnessPercent($brightnessPercent)
-    {
-        if ($brightnessPercent < 0 || $brightnessPercent > 100) {
-            throw new \Exception('Brightness percent must be between 0 and 100');
-        }
-        $brightness = 0x02;
-        $this->rgbwSendOnToActiveGroup();
-        if ($brightnessPercent < 14) {
-            $brightness = 0x02;
-        }
-        if ($brightnessPercent >= 14 && $brightnessPercent < 17) {
-            $brightness = 0x03;
-        }
-        if ($brightnessPercent >= 17 && $brightnessPercent < 21) {
-            $brightness = 0x04;
-        }
-        if ($brightnessPercent >= 21 && $brightnessPercent < 24) {
-            $brightness = 0x05;
-        }
-        if ($brightnessPercent >= 24 && $brightnessPercent < 28) {
-            $brightness = 0x06;
-        }
-        if ($brightnessPercent >= 28 && $brightnessPercent < 32) {
-            $brightness = 0x07;
-        }
-        if ($brightnessPercent >= 32 && $brightnessPercent < 35) {
-            $brightness = 0x08;
-        }
-        if ($brightnessPercent >= 35 && $brightnessPercent < 39) {
-            $brightness = 0x09;
-        }
-        if ($brightnessPercent >= 39 && $brightnessPercent < 42) {
-            $brightness = 0xa0;
-        }
-        if ($brightnessPercent >= 42 && $brightnessPercent < 46) {
-            $brightness = 0xb0;
-        }
-        if ($brightnessPercent >= 46 && $brightnessPercent < 50) {
-            $brightness = 0xc0;
-        }
-        if ($brightnessPercent >= 50 && $brightnessPercent < 53) {
-            $brightness = 0xd0;
-        }
-        if ($brightnessPercent >= 53 && $brightnessPercent < 57) {
-            $brightness = 0xe0;
-        }
-        if ($brightnessPercent >= 57 && $brightnessPercent < 60) {
-            $brightness = 0xf0;
-        }
-        if ($brightnessPercent >= 60 && $brightnessPercent < 64) {
-            $brightness = 0x10;
-        }
-        if ($brightnessPercent >= 64 && $brightnessPercent < 68) {
-            $brightness = 0x11;
-        }
-        if ($brightnessPercent >= 68 && $brightnessPercent < 71) {
-            $brightness = 0x12;
-        }
-        if ($brightnessPercent >= 71 && $brightnessPercent < 75) {
-            $brightness = 0x13;
-        }
-        if ($brightnessPercent >= 75 && $brightnessPercent < 78) {
-            $brightness = 0x14;
-        }
-        if ($brightnessPercent >= 78 && $brightnessPercent < 82) {
-            $brightness = 0x15;
-        }
-        if ($brightnessPercent >= 82 && $brightnessPercent < 86) {
-            $brightness = 0x16;
-        }
-        if ($brightnessPercent >= 86 && $brightnessPercent < 89) {
-            $brightness = 0x17;
-        }
-        if ($brightnessPercent >= 89 && $brightnessPercent < 93) {
-            $brightness = 0x18;
-        }
-        if ($brightnessPercent >= 93 && $brightnessPercent < 96) {
-            $brightness = 0x19;
-        }
-        if ($brightnessPercent >= 96 && $brightnessPercent < 100) {
-            $brightness = 0x1a;
-        }
-        if ($brightnessPercent >= 96 && $brightnessPercent <= 100) {
-            $brightness = 0x1b;
-        }
-
-        $this->sendCommand(array(0x4e, $brightness));
-
+    public function rgbwBrightnessPercent($brightnessPercent,$group=null) {
+      if ($brightnessPercent < 0 || $brightnessPercent > 100) {
+	throw new \Exception('Brightness percent must be between 0 and 100');
+      }
+      $brightnessPercent = round(2+(($brightnessPercent/100)*25));
+      $group = isset($group) ? $group : $this->getRgbwActiveGroup();
+      $this->rgbwSendOnToGroup($group);
+      $this->sendCommand(array(0x4e, $brightnessPercent));
     }
-
 
     public function rgbwDiscoMode()
     {
