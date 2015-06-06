@@ -240,6 +240,12 @@ class Milight
       $this->command($activeCommand);
     }
 
+    public function rgbwSetGroupToNightMode($group) {
+      $this->SendOffToGroup($group);
+      $activeCommand = 'rgbwGroup' . $group . 'NightMode';
+      $this->command($activeCommand);
+    }
+
     public function whiteSendOnToGroup($group) {
       $activeGroupOnCommand = 'whiteGroup' . $group . 'On';
       $this->command($activeGroupOnCommand);
@@ -248,6 +254,11 @@ class Milight
     public function whiteSendOffToGroup($group) {
       $activeGroupOffCommand = 'whiteGroup' . $group . 'Off';
       $this->command($activeGroupOffCommand);
+    }
+
+    public function whiteSetGroupToNightMode($group) {
+      $activeCommand = 'whiteGroup' . $group . 'NightMode';
+      $this->command($activeCommand);
     }
 
     public function whiteSendOnToActiveGroup() {
