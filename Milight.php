@@ -241,7 +241,7 @@ class Milight
     }
 
     public function rgbwSetGroupToNightMode($group) {
-      $this->SendOffToGroup($group);
+      $this->rgbwSendOffToGroup($group);
       $activeCommand = 'rgbwGroup' . $group . 'NightMode';
       $this->command($activeCommand);
     }
