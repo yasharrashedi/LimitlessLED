@@ -1,0 +1,9 @@
+{
+  "name": "yasharrashedi/limitless-led",
+  "description": "LimitlessLED/Milight integration library",
+  "minimum-stability": "stable",
+  "require": {},
+  "autoload": {
+    "files": ["Milight.php"]
+  }
+}
