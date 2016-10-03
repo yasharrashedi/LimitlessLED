@@ -503,11 +503,11 @@ class Milight
     */
     public function rgbwSetColorToWhite()
     {
-        if ($this->getActiveGroup() == 0) {
+        if ($this->getRgbwActiveGroup() == 0) {
             $this->rgbwAllSetToWhite();
             return;
         }
-        $this->command('rgbwGroup'.strval($this->getActiveGroup()).'SetToWhite');
+        $this->command('rgbwGroup'.strval($this->getRgbwActiveGroup()).'SetToWhite');
     }
 
     public function rgbwSetColorToAqua()
